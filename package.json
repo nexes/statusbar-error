@@ -1,0 +1,48 @@
+{
+  "name": "statusbarerror",
+  "version": "0.0.1",
+  "publisher": "Joe Berria",
+  "engines": {
+    "vscode": "^1.27.0"
+  },
+  "author": {
+    "name": "Joe Berria",
+    "email": "joeberria@gmail.com"
+  },
+  "description": "Show error and warning messages in the status bar for th current line",
+  "displayName": "Statusbar error",
+  "categories": [
+    "Other"
+  ],
+  "main": "./out/extension",
+  "activationEvents": [
+    "*"
+  ],
+  "contributes": {
+    "commands": [
+      {
+        "command": "sb.start",
+        "title": "Errors on",
+        "category": "Statusbar error"
+      },
+      {
+        "command": "sb.off",
+        "title": "Errors off",
+        "category": "Statusbar error"
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "compile": "tsc -p ./",
+    "postinstall": "node ./node_modules/vscode/bin/install",
+    "test": "node ./node_modules/vscode/bin/test"
+  },
+  "devDependencies": {
+    "typescript": "3.1.3",
+    "vscode": "1.1.21",
+    "@types/node": "9.6.35"
+  },
+  "license": "MIT"
+}

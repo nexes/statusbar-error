@@ -1,0 +1,43 @@
+{
+  "defaultSeverity": "error",
+  "extends": [
+    "tslint:recommended"
+  ],
+  "rules": {
+    "max-line-length": false,
+    "no-bitwise": false,
+    "curly": true,
+    "quotemark": [
+      true,
+      "single"
+    ],
+    "semicolon": [
+      true,
+      "always"
+    ],
+    "no-console": [
+      true,
+      "debug",
+      "info",
+      "time",
+      "timeEnd",
+      "trace"
+    ],
+    "class-name": true,
+    "no-unused-expression": true,
+    "indent": [
+      true,
+      "spaces",
+      2
+    ],
+    "variable-name": [
+      true,
+      "check-format",
+      "allow-leading-underscore"
+    ],
+    "object-literal-sort-keys": false,
+    "no-consecutive-blank-lines": false,
+    "ordered-imports": false
+  },
+  "rulesDirectory": []
+}
