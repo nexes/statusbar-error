@@ -1,7 +1,7 @@
 {
   "name": "statusbarerror",
   "version": "0.0.1",
-  "publisher": "Joe Berria",
+  "publisher": "nexes",
   "engines": {
     "vscode": "^1.27.0"
   },
@@ -21,13 +21,8 @@
   "contributes": {
     "commands": [
       {
-        "command": "sb.start",
-        "title": "Errors on",
-        "category": "Statusbar error"
-      },
-      {
-        "command": "sb.off",
-        "title": "Errors off",
+        "command": "sb.toggle",
+        "title": "Toggle statusbar errors",
         "category": "Statusbar error"
       }
     ]
