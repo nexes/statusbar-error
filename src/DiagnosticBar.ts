@@ -70,18 +70,16 @@ export class DiagnosticBar implements Disposable {
 
   private diagnosticChangedListener(diagnostic: DiagnosticChangeEvent): void {
     for (const uri of diagnostic.uris) {
-      if (this._currentDiagnostics.has(uri.path)) {
-        const issues = languages.getDiagnostics(uri);
-        const dMessage: IDiagnosticMessage[] = issues.map((e) => {
-          return {
-            line: e.range.start.line,
-            severity: e.severity,
-            message: `[${e.source}] ${e.message}`,
-          };
-        });
+      const issues = languages.getDiagnostics(uri);
+      const dMessage: IDiagnosticMessage[] = issues.map((e) => {
+        return {
+          line: e.range.start.line,
+          severity: e.severity,
+          message: `[${e.source}] ${e.message}`,
+        };
+      });
 
-        this._currentDiagnostics.set(uri.path, dMessage);
-      }
+      this._currentDiagnostics.set(uri.path, dMessage);
     }
   }
 }
