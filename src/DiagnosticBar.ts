@@ -62,7 +62,7 @@ export class DiagnosticBar implements Disposable {
   }
 
   public activeEditorChanged(editor: TextEditor): void {
-    const issues = languages.getDiagnostics(this._currentDocURI);
+    const issues = languages.getDiagnostics(editor.document.uri);
     const dMessage: IDiagnosticMessage[] = issues.map((e) => {
       return {
         line: e.range.start.line,
