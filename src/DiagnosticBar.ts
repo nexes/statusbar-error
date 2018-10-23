@@ -31,6 +31,7 @@ interface IDiagnosticIcon {
 }
 
 export class DiagnosticBar implements Disposable {
+  private _hidden: boolean;
   private _statusBarItem: StatusBarItem;
   private _disposables: Disposable[];
   private _currentDocURI: Uri;
@@ -40,6 +41,7 @@ export class DiagnosticBar implements Disposable {
 
 
   constructor(item: StatusBarItem) {
+    this._hidden = false;
     this._disposables = [];
     this._currentDiagnostics = new Map();
     this._statusBarItem = item;
@@ -103,10 +105,10 @@ export class DiagnosticBar implements Disposable {
         default:
           this._statusBarItem.text = `${lintMessage.message}`;
       }
-      this._statusBarItem.show();
+      this.show();
 
     } else {
-      this._statusBarItem.hide();
+      this.hide();
     }
   }
 
@@ -132,6 +134,20 @@ export class DiagnosticBar implements Disposable {
       warning,
       error,
     };
+  }
+
+  private hide(): void {
+    if (!this._hidden) {
+      this._hidden = true;
+      this._statusBarItem.hide();
+    }
+  }
+
+  private show(): void {
+    if (this._hidden) {
+      this._hidden = false;
+      this._statusBarItem.show();
+    }
   }
 
   private diagnosticChangedListener(diagnostic: DiagnosticChangeEvent): void {
