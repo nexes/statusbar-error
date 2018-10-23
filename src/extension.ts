@@ -17,7 +17,8 @@ export function activate(context: ExtensionContext) {
   const settings = workspace.getConfiguration('statusbarerror.color');
 
   diagnosticBar.setColors(
-    settings.get('info') || '41e086',
+    settings.get('info') || '#41e086',
+    settings.get('hint') || '#35b1f4',
     settings.get('warning') || '#f4b81f',
     settings.get('error') || '#f41f1f',
   );
@@ -56,7 +57,8 @@ function settingsValueChanged(event: ConfigurationChangeEvent): void {
   if (event.affectsConfiguration('statusbarerror.color')) {
     const settings = workspace.getConfiguration('statusbarerror.color');
     diagnosticBar.setColors(
-      settings.get('info') || '41e086',
+      settings.get('info') || '#41e086',
+      settings.get('hint') || '#35b1f4',
       settings.get('warning') || '#f4b81f',
       settings.get('error') || '#f41f1f',
     );

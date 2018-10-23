@@ -36,6 +36,11 @@
           "type": "string",
           "default": "#41e086",
           "description": "Font color for linter information"
+        },
+        "statusbarerror.color.hint": {
+          "type": "string",
+          "default": "#35b1f4",
+          "description": "Font color for linter hints"
         }
       }
     },
