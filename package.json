@@ -19,6 +19,26 @@
     "*"
   ],
   "contributes": {
+    "configuration": {
+      "title": "Statusbar Error configuration",
+      "properties": {
+        "statusbarerror.color.warning": {
+          "type": "string",
+          "default": "#f4b81f",
+          "description": "Font color for linter warnings"
+        },
+        "statusbarerror.color.error": {
+          "type": "string",
+          "default": "#f41f1f",
+          "description": "Font color for linter errors"
+        },
+        "statusbarerror.color.info": {
+          "type": "string",
+          "default": "#41e086",
+          "description": "Font color for linter information"
+        }
+      }
+    },
     "commands": [
       {
         "command": "sb.toggle",
