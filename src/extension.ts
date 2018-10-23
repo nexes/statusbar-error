@@ -9,7 +9,7 @@ import {
 } from 'vscode';
 
 
-const diagnosticBar = new DiagnosticBar(window.createStatusBarItem(StatusBarAlignment.Left));
+const diagnosticBar = new DiagnosticBar(window.createStatusBarItem(StatusBarAlignment.Left, -1));
 
 export function activate(context: ExtensionContext) {
   const toggleCmd = commands.registerCommand('sb.toggle', () => {
@@ -31,7 +31,7 @@ export function deactive() {
 }
 
 function selectionTextEditorChange(selection: TextEditorSelectionChangeEvent) {
-  diagnosticBar.selectionEditorChanged(selection);
+  diagnosticBar.cursorSelectionChangedListener(selection);
 }
 
 function activeTextEditorChange(editor: TextEditor | undefined): void {
