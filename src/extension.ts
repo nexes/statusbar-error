@@ -14,13 +14,20 @@ import {
 const diagnosticBar = new DiagnosticBar(window.createStatusBarItem(StatusBarAlignment.Left, -1));
 
 export function activate(context: ExtensionContext) {
-  const settings = workspace.getConfiguration('statusbarerror.color');
+  const settings = workspace.getConfiguration('statusbarerror');
 
   diagnosticBar.setColors(
-    settings.get('info') || '#41e086',
-    settings.get('hint') || '#35b1f4',
-    settings.get('warning') || '#f4b81f',
-    settings.get('error') || '#f41f1f',
+    settings.get('color.info') || '#41e086',
+    settings.get('color.hint') || '#35b1f4',
+    settings.get('color.warning') || '#f4b81f',
+    settings.get('color.error') || '#f41f1f',
+  );
+
+  diagnosticBar.setIcons(
+    settings.get('icon.info') || '',
+    settings.get('icon.hint') || '',
+    settings.get('icon.warning') || '',
+    settings.get('icon.error') || '',
   );
 
   const toggleCmd = commands.registerCommand('sb.toggle', () => {
@@ -54,13 +61,21 @@ function activeTextEditorChange(editor: TextEditor | undefined): void {
 }
 
 function settingsValueChanged(event: ConfigurationChangeEvent): void {
-  if (event.affectsConfiguration('statusbarerror.color')) {
-    const settings = workspace.getConfiguration('statusbarerror.color');
+  if (event.affectsConfiguration('statusbarerror')) {
+    const settings = workspace.getConfiguration('statusbarerror');
+
     diagnosticBar.setColors(
-      settings.get('info') || '#41e086',
-      settings.get('hint') || '#35b1f4',
-      settings.get('warning') || '#f4b81f',
-      settings.get('error') || '#f41f1f',
+      settings.get('color.info') || '#41e086',
+      settings.get('color.hint') || '#35b1f4',
+      settings.get('color.warning') || '#f4b81f',
+      settings.get('color.error') || '#f41f1f',
+    );
+
+    diagnosticBar.setIcons(
+      settings.get('icon.info') || '',
+      settings.get('icon.hint') || '',
+      settings.get('icon.warning') || '',
+      settings.get('icon.error') || '',
     );
   }
 }

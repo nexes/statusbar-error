@@ -41,6 +41,26 @@
           "type": "string",
           "default": "#35b1f4",
           "description": "Font color for linter hints"
+        },
+        "statusbarerror.icon.warning": {
+          "type": "string",
+          "default": "⭕️",
+          "description": "Unicode icon for linter warnings"
+        },
+        "statusbarerror.icon.error": {
+          "type": "string",
+          "default": "❌",
+          "description": "Unicode icon for linter errors"
+        },
+        "statusbarerror.icon.info": {
+          "type": "string",
+          "default": "❓",
+          "description": "Unicode icon for linter info"
+        },
+        "statusbarerror.icon.hint": {
+          "type": "string",
+          "default": "⭐️",
+          "description": "Unicode icon for linter hints"
         }
       }
     },
