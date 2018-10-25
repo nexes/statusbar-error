@@ -136,14 +136,14 @@ export class DiagnosticBar implements Disposable {
     };
   }
 
-  private hide(): void {
+  public hide(): void {
     if (!this._hidden) {
       this._hidden = true;
       this._statusBarItem.hide();
     }
   }
 
-  private show(): void {
+  public show(): void {
     if (this._hidden) {
       this._hidden = false;
       this._statusBarItem.show();
@@ -157,7 +157,7 @@ export class DiagnosticBar implements Disposable {
         return {
           line: e.range.start.line,
           severity: e.severity,
-          message: `[${e.source}] ${e.message}`,
+          message: !!e.source ? `[ ${e.source} ] ${e.message}` : `${e.message}`,
         };
       });
 

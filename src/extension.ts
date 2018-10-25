@@ -14,6 +14,9 @@ import {
 const diagnosticBar = new DiagnosticBar(window.createStatusBarItem(StatusBarAlignment.Left, -1));
 
 export function activate(context: ExtensionContext) {
+  const activeEditorDisposable = window.onDidChangeActiveTextEditor(activeTextEditorChange);
+  const selectionEditorDisposable = window.onDidChangeTextEditorSelection(selectionTextEditorChange);
+  const settingsChangeDisposable = workspace.onDidChangeConfiguration(settingsValueChanged);
   const settings = workspace.getConfiguration('statusbarerror');
 
   diagnosticBar.setColors(
@@ -35,10 +38,6 @@ export function activate(context: ExtensionContext) {
     window.showInformationMessage('hello from start');
   });
 
-  const activeEditorDisposable = window.onDidChangeActiveTextEditor(activeTextEditorChange);
-  const selectionEditorDisposable = window.onDidChangeTextEditorSelection(selectionTextEditorChange);
-  const settingsChangeDisposable = workspace.onDidChangeConfiguration(settingsValueChanged);
-
   context.subscriptions.push(toggleCmd);
   context.subscriptions.push(diagnosticBar);
   context.subscriptions.push(activeEditorDisposable);
@@ -55,6 +54,8 @@ function selectionTextEditorChange(selection: TextEditorSelectionChangeEvent) {
 }
 
 function activeTextEditorChange(editor: TextEditor | undefined): void {
+  diagnosticBar.hide();
+
   if (!!editor) {
     diagnosticBar.activeEditorChanged(editor);
   }
