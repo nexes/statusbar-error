@@ -75,46 +75,19 @@ export class DiagnosticBar implements Disposable {
 
     this._currentDocURI = editor.document.uri;
     this._currentDiagnostics.set(this._currentDocURI.path, dMessage);
+
+    this.updateStatusbarMessage(editor.selection.active.line);
   }
 
   public cursorSelectionChangedListener(selection: TextEditorSelectionChangeEvent): void {
-    const messages = this._currentDiagnostics.get(this._currentDocURI.path);
     const cursorLine = selection.selections[ 0 ].active.line;
-
-    if (!messages || messages.length === 0) { return; }
-
-    const lintMessage = messages.find((elem) => elem.line === cursorLine);
-    if (!!lintMessage) {
-      switch (lintMessage.severity) {
-        case 0:
-          this._statusBarItem.color = this._currentColors.error;
-          this._statusBarItem.text = `${this._currentIcons.error} \t${lintMessage.message}`;
-          break;
-        case 1:
-          this._statusBarItem.color = this._currentColors.warning;
-          this._statusBarItem.text = `${this._currentIcons.warning} \t${lintMessage.message}`;
-          break;
-        case 2:
-          this._statusBarItem.color = this._currentColors.info;
-          this._statusBarItem.text = `${this._currentIcons.info} \t${lintMessage.message}`;
-          break;
-        case 3:
-          this._statusBarItem.color = this._currentColors.hint;
-          this._statusBarItem.text = `${this._currentIcons.hint} \t${lintMessage.message}`;
-          break;
-        default:
-          this._statusBarItem.text = `${lintMessage.message}`;
-      }
-      this.show();
-
-    } else {
-      this.hide();
-    }
+    this.updateStatusbarMessage(cursorLine);
   }
 
-  public dispose(): void {
-    for (const _dispose of this._disposables) {
-      _dispose.dispose();
+  public textDocumentClosedListener(uri: Uri): void {
+    if (this._currentDiagnostics.has(uri.path)) {
+      this._currentDiagnostics.delete(uri.path);
+      this.hide();
     }
   }
 
@@ -150,6 +123,12 @@ export class DiagnosticBar implements Disposable {
     }
   }
 
+  public dispose(): void {
+    for (const _dispose of this._disposables) {
+      _dispose.dispose();
+    }
+  }
+
   private diagnosticChangedListener(diagnostic: DiagnosticChangeEvent): void {
     for (const uri of diagnostic.uris) {
       const issues = languages.getDiagnostics(uri);
@@ -162,6 +141,41 @@ export class DiagnosticBar implements Disposable {
       });
 
       this._currentDiagnostics.set(uri.path, dMessage);
+    }
+
+    if (window.activeTextEditor) { this.updateStatusbarMessage(window.activeTextEditor.selection.active.line); }
+  }
+
+  private updateStatusbarMessage(cursorLine: number): void {
+    const messages = this._currentDiagnostics.get(this._currentDocURI.path);
+    if (!messages || messages.length === 0) { return; }
+
+    const lintMessage = messages.find((elem) => elem.line === cursorLine);
+    if (!!lintMessage) {
+      switch (lintMessage.severity) {
+        case 0:
+          this._statusBarItem.color = this._currentColors.error;
+          this._statusBarItem.text = `${this._currentIcons.error} \t${lintMessage.message}`;
+          break;
+        case 1:
+          this._statusBarItem.color = this._currentColors.warning;
+          this._statusBarItem.text = `${this._currentIcons.warning} \t${lintMessage.message}`;
+          break;
+        case 2:
+          this._statusBarItem.color = this._currentColors.info;
+          this._statusBarItem.text = `${this._currentIcons.info} \t${lintMessage.message}`;
+          break;
+        case 3:
+          this._statusBarItem.color = this._currentColors.hint;
+          this._statusBarItem.text = `${this._currentIcons.hint} \t${lintMessage.message}`;
+          break;
+        default:
+          this._statusBarItem.text = `${lintMessage.message}`;
+      }
+      this.show();
+
+    } else {
+      this.hide();
     }
   }
 }
