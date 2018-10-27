@@ -5,6 +5,7 @@ import {
   window,
   workspace,
   TextEditor,
+  TextDocument,
   StatusBarAlignment,
   TextEditorSelectionChangeEvent,
   ConfigurationChangeEvent,
@@ -14,10 +15,12 @@ import {
 const diagnosticBar = new DiagnosticBar(window.createStatusBarItem(StatusBarAlignment.Left, -1));
 
 export function activate(context: ExtensionContext) {
+  const settings = workspace.getConfiguration('statusbarerror');
+
   const activeEditorDisposable = window.onDidChangeActiveTextEditor(activeTextEditorChange);
   const selectionEditorDisposable = window.onDidChangeTextEditorSelection(selectionTextEditorChange);
   const settingsChangeDisposable = workspace.onDidChangeConfiguration(settingsValueChanged);
-  const settings = workspace.getConfiguration('statusbarerror');
+  const editorClosedDisposable = workspace.onDidCloseTextDocument(textDocumentClosedListener);
 
   diagnosticBar.setColors(
     settings.get('color.info') || '#41e086',
@@ -40,6 +43,7 @@ export function activate(context: ExtensionContext) {
 
   context.subscriptions.push(toggleCmd);
   context.subscriptions.push(diagnosticBar);
+  context.subscriptions.push(editorClosedDisposable);
   context.subscriptions.push(activeEditorDisposable);
   context.subscriptions.push(selectionEditorDisposable);
   context.subscriptions.push(settingsChangeDisposable);
@@ -59,6 +63,10 @@ function activeTextEditorChange(editor: TextEditor | undefined): void {
   if (!!editor) {
     diagnosticBar.activeEditorChanged(editor);
   }
+}
+
+function textDocumentClosedListener(editor: TextDocument) {
+  diagnosticBar.textDocumentClosedListener(editor.uri);
 }
 
 function settingsValueChanged(event: ConfigurationChangeEvent): void {
