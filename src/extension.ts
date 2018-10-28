@@ -67,8 +67,7 @@ export function activate(context: ExtensionContext) {
   }));
 
   const toggleCmd = commands.registerCommand('sb.toggle', () => {
-    // TODO
-    window.showInformationMessage('hello from start');
+    diagnosticBar.toggleActive();
   });
 
   context.subscriptions.push(toggleCmd);
@@ -76,5 +75,5 @@ export function activate(context: ExtensionContext) {
 }
 
 export function deactive() {
-  // TODO
+  // TODO when needed
 }

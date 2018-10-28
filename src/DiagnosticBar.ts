@@ -32,6 +32,7 @@ interface IDiagnosticIcon {
 
 export class DiagnosticBar implements Disposable {
   private _hidden: boolean;
+  private _isActive: boolean;
   private _statusBarItem: StatusBarItem;
   private _disposables: Disposable[];
   private _currentDocURI: Uri;
@@ -42,6 +43,7 @@ export class DiagnosticBar implements Disposable {
 
   constructor(item: StatusBarItem) {
     this._hidden = false;
+    this._isActive = true;
     this._disposables = [];
     this._currentDiagnostics = new Map();
     this._statusBarItem = item;
@@ -76,10 +78,13 @@ export class DiagnosticBar implements Disposable {
     this._currentDocURI = editor.document.uri;
     this._currentDiagnostics.set(this._currentDocURI.path, dMessage);
 
+    if (!this._isActive) { return; }
     this.updateStatusbarMessage(editor.selection.active.line);
   }
 
   public cursorSelectionChangedListener(selection: TextEditorSelectionChangeEvent): void {
+    if (!this._isActive) { return; }
+
     const cursorLine = selection.selections[ 0 ].active.line;
     this.updateStatusbarMessage(cursorLine);
   }
@@ -123,6 +128,20 @@ export class DiagnosticBar implements Disposable {
     }
   }
 
+  public toggleActive(): void {
+    this._isActive = !this._isActive;
+
+    if (this._isActive) {
+      const activeEditor = window.activeTextEditor;
+
+      if (!!activeEditor) {
+        this.updateStatusbarMessage(activeEditor.selection.active.line);
+      }
+    } else {
+      this.hide();
+    }
+  }
+
   public dispose(): void {
     for (const _dispose of this._disposables) {
       _dispose.dispose();
@@ -143,6 +162,7 @@ export class DiagnosticBar implements Disposable {
       this._currentDiagnostics.set(uri.path, dMessage);
     }
 
+    if (!this._isActive) { return; }
     if (window.activeTextEditor) { this.updateStatusbarMessage(window.activeTextEditor.selection.active.line); }
   }
 
