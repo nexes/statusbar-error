@@ -2,7 +2,7 @@
 ---
 Visual Studio Code extensions that will display the linter message of the current active line in the status bar.
 
-show a gif here
+![](./images/extensionexample.gif)
 
 ### Install
 ---
