@@ -6,7 +6,7 @@ Visual Studio Code extensions that will display the linter message of the curren
 
 ### Install
 ---
-Install [StatusBarError]() from the Visual Studio Code extension gallery.
+Install [StatusBarError](https://marketplace.visualstudio.com/items?itemName=JoeBerria.statusbarerror) from the Visual Studio Code extension gallery.
 
 ### Options
 ---
