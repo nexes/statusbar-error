@@ -12,15 +12,9 @@ import {
 } from 'vscode';
 
 
-const diagnosticBar = new DiagnosticBar(window.createStatusBarItem(StatusBarAlignment.Left, -1));
-
 export function activate(context: ExtensionContext) {
   const settings = workspace.getConfiguration('statusbarerror');
-
-  const activeEditorDisposable = window.onDidChangeActiveTextEditor(activeTextEditorChange);
-  const selectionEditorDisposable = window.onDidChangeTextEditorSelection(selectionTextEditorChange);
-  const settingsChangeDisposable = workspace.onDidChangeConfiguration(settingsValueChanged);
-  const editorClosedDisposable = workspace.onDidCloseTextDocument(textDocumentClosedListener);
+  const diagnosticBar = new DiagnosticBar(window.createStatusBarItem(StatusBarAlignment.Left, -1));
 
   diagnosticBar.setColors(
     settings.get('color.info') || '#41e086',
@@ -36,6 +30,42 @@ export function activate(context: ExtensionContext) {
     settings.get('icon.error') || '',
   );
 
+  context.subscriptions.push(window.onDidChangeActiveTextEditor((editor: TextEditor | undefined) => {
+    diagnosticBar.hide();
+
+    if (!!editor) {
+      diagnosticBar.activeEditorChanged(editor);
+    }
+  }));
+
+  context.subscriptions.push(window.onDidChangeTextEditorSelection((selection: TextEditorSelectionChangeEvent) => {
+    diagnosticBar.cursorSelectionChangedListener(selection);
+  }));
+
+  context.subscriptions.push(workspace.onDidChangeConfiguration((event: ConfigurationChangeEvent) => {
+    if (event.affectsConfiguration('statusbarerror')) {
+      const _settings = workspace.getConfiguration('statusbarerror');
+
+      diagnosticBar.setColors(
+        _settings.get('color.info') || '#41e086',
+        _settings.get('color.hint') || '#35b1f4',
+        _settings.get('color.warning') || '#f4b81f',
+        _settings.get('color.error') || '#f41f1f',
+      );
+
+      diagnosticBar.setIcons(
+        _settings.get('icon.info') || '',
+        _settings.get('icon.hint') || '',
+        _settings.get('icon.warning') || '',
+        _settings.get('icon.error') || '',
+      );
+    }
+  }));
+
+  context.subscriptions.push(workspace.onDidCloseTextDocument((editor: TextDocument) => {
+    diagnosticBar.textDocumentClosedListener(editor.uri);
+  }));
+
   const toggleCmd = commands.registerCommand('sb.toggle', () => {
     // TODO
     window.showInformationMessage('hello from start');
@@ -43,48 +73,8 @@ export function activate(context: ExtensionContext) {
 
   context.subscriptions.push(toggleCmd);
   context.subscriptions.push(diagnosticBar);
-  context.subscriptions.push(editorClosedDisposable);
-  context.subscriptions.push(activeEditorDisposable);
-  context.subscriptions.push(selectionEditorDisposable);
-  context.subscriptions.push(settingsChangeDisposable);
 }
 
 export function deactive() {
   // TODO
-}
-
-function selectionTextEditorChange(selection: TextEditorSelectionChangeEvent) {
-  diagnosticBar.cursorSelectionChangedListener(selection);
-}
-
-function activeTextEditorChange(editor: TextEditor | undefined): void {
-  diagnosticBar.hide();
-
-  if (!!editor) {
-    diagnosticBar.activeEditorChanged(editor);
-  }
-}
-
-function textDocumentClosedListener(editor: TextDocument) {
-  diagnosticBar.textDocumentClosedListener(editor.uri);
-}
-
-function settingsValueChanged(event: ConfigurationChangeEvent): void {
-  if (event.affectsConfiguration('statusbarerror')) {
-    const settings = workspace.getConfiguration('statusbarerror');
-
-    diagnosticBar.setColors(
-      settings.get('color.info') || '#41e086',
-      settings.get('color.hint') || '#35b1f4',
-      settings.get('color.warning') || '#f4b81f',
-      settings.get('color.error') || '#f41f1f',
-    );
-
-    diagnosticBar.setIcons(
-      settings.get('icon.info') || '',
-      settings.get('icon.hint') || '',
-      settings.get('icon.warning') || '',
-      settings.get('icon.error') || '',
-    );
-  }
 }
