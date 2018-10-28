@@ -168,7 +168,10 @@ export class DiagnosticBar implements Disposable {
 
   private updateStatusbarMessage(cursorLine: number): void {
     const messages = this._currentDiagnostics.get(this._currentDocURI.path);
-    if (!messages || messages.length === 0) { return; }
+    if (!messages || messages.length === 0) {
+      this.hide();
+      return;
+    }
 
     const lintMessage = messages.find((elem) => elem.line === cursorLine);
     if (!!lintMessage) {

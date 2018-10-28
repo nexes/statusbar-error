@@ -1,6 +1,6 @@
 {
   "name": "statusbarerror",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "publisher": "JoeBerria",
   "engines": {
     "vscode": "^1.27.0"
