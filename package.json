@@ -9,8 +9,12 @@
     "name": "Joe Berria",
     "email": "joeberria@gmail.com"
   },
-  "description": "Show error and warning messages in the status bar for th current line",
+  "description": "Show error and warning messages in the status bar for the current line",
   "displayName": "Statusbar error",
+  "keywords": [
+    "diagnostic",
+    "statusbar"
+  ],
   "categories": [
     "Other"
   ],
