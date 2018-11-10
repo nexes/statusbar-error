@@ -12,6 +12,7 @@ import {
 
 interface IDiagnosticMessage {
   message: string;
+  source: string;
   severity: number;
   line: number;
 }
@@ -71,7 +72,8 @@ export class DiagnosticBar implements Disposable {
       return {
         line: e.range.start.line,
         severity: e.severity,
-        message: `[${e.source}] ${e.message}`,
+        source: e.source || '',
+        message: e.message,
       };
     });
 
@@ -155,7 +157,8 @@ export class DiagnosticBar implements Disposable {
         return {
           line: e.range.start.line,
           severity: e.severity,
-          message: !!e.source ? `[ ${e.source} ] ${e.message}` : `${e.message}`,
+          source: e.source || '',
+          message: e.message,
         };
       });
 
@@ -178,22 +181,22 @@ export class DiagnosticBar implements Disposable {
       switch (lintMessage.severity) {
         case 0:
           this._statusBarItem.color = this._currentColors.error;
-          this._statusBarItem.text = `${this._currentIcons.error} \t${lintMessage.message}`;
+          this._statusBarItem.text = `${this._currentIcons.error} ${lintMessage.source} - ${lintMessage.message}`;
           break;
         case 1:
           this._statusBarItem.color = this._currentColors.warning;
-          this._statusBarItem.text = `${this._currentIcons.warning} \t${lintMessage.message}`;
+          this._statusBarItem.text = `${this._currentIcons.warning} ${lintMessage.source} - ${lintMessage.message}`;
           break;
         case 2:
           this._statusBarItem.color = this._currentColors.info;
-          this._statusBarItem.text = `${this._currentIcons.info} \t${lintMessage.message}`;
+          this._statusBarItem.text = `${this._currentIcons.info} ${lintMessage.source} - ${lintMessage.message}`;
           break;
         case 3:
           this._statusBarItem.color = this._currentColors.hint;
-          this._statusBarItem.text = `${this._currentIcons.hint} \t${lintMessage.message}`;
+          this._statusBarItem.text = `${this._currentIcons.hint} ${lintMessage.source} - ${lintMessage.message}`;
           break;
         default:
-          this._statusBarItem.text = `${lintMessage.message}`;
+          this._statusBarItem.text = `${lintMessage.source} - ${lintMessage.message}`;
       }
       this.show();
 
