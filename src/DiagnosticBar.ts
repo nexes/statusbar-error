@@ -181,6 +181,7 @@ export class DiagnosticBar implements Disposable {
       switch (lintMessage.severity) {
         case 0:
           this._statusBarItem.color = this._currentColors.error;
+<<<<<<< HEAD
           this._statusBarItem.text = `${this._currentIcons.error} ${lintMessage.source} - ${lintMessage.message}`;
           break;
         case 1:
@@ -194,6 +195,21 @@ export class DiagnosticBar implements Disposable {
         case 3:
           this._statusBarItem.color = this._currentColors.hint;
           this._statusBarItem.text = `${this._currentIcons.hint} ${lintMessage.source} - ${lintMessage.message}`;
+=======
+          this._statusBarItem.text = `${this._currentIcons.error} ${lintMessage.message}`;
+          break;
+        case 1:
+          this._statusBarItem.color = this._currentColors.warning;
+          this._statusBarItem.text = `${this._currentIcons.warning} ${lintMessage.message}`;
+          break;
+        case 2:
+          this._statusBarItem.color = this._currentColors.info;
+          this._statusBarItem.text = `${this._currentIcons.info} ${lintMessage.message}`;
+          break;
+        case 3:
+          this._statusBarItem.color = this._currentColors.hint;
+          this._statusBarItem.text = `${this._currentIcons.hint} ${lintMessage.message}`;
+>>>>>>> 3f50cd40da38e5a453548f18dea6a98491d01421
           break;
         default:
           this._statusBarItem.text = `${lintMessage.source} - ${lintMessage.message}`;
