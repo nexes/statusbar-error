@@ -1,3 +1,4 @@
+import { DiagnosticGutter, IGutterItem } from './DiagnosticGutter';
 import {
   Uri,
   window,
@@ -40,14 +41,15 @@ export class DiagnosticBar implements Disposable {
   private _currentDiagnostics: Map<string, IDiagnosticMessage[]>;
   private _currentColors: IDiagnosticColor;
   private _currentIcons: IDiagnosticIcon;
+  private _gutterDecorator: DiagnosticGutter;
 
-
-  constructor(item: StatusBarItem) {
+  constructor(item: StatusBarItem, gutterDecorator: DiagnosticGutter) {
     this._hidden = false;
     this._isActive = true;
     this._disposables = [];
-    this._currentDiagnostics = new Map();
     this._statusBarItem = item;
+    this._currentDiagnostics = new Map();
+    this._gutterDecorator = gutterDecorator;
     this._currentDocURI = window.activeTextEditor ? window.activeTextEditor.document.uri : Uri.file('.');
     this._currentColors = {
       warning: '#f4b81f',
@@ -62,25 +64,17 @@ export class DiagnosticBar implements Disposable {
       hint: '',
     };
 
+    this._disposables.push(this._gutterDecorator);
     this._disposables.push(Disposable.from(this._statusBarItem));
     this._disposables.push(languages.onDidChangeDiagnostics((e) => this.diagnosticChangedListener(e)));
   }
 
   public activeEditorChanged(editor: TextEditor): void {
-    const issues = languages.getDiagnostics(editor.document.uri);
-    const dMessage: IDiagnosticMessage[] = issues.map((e) => {
-      return {
-        line: e.range.start.line,
-        severity: e.severity,
-        source: e.source || '',
-        message: e.message,
-      };
-    });
-
+    this.updateDiagnosticList(editor.document.uri);
     this._currentDocURI = editor.document.uri;
-    this._currentDiagnostics.set(this._currentDocURI.path, dMessage);
 
     if (!this._isActive) { return; }
+    this._gutterDecorator.showGutterIconsForDocument(this._currentDocURI);
     this.updateStatusbarMessage(editor.selection.active.line);
   }
 
@@ -94,6 +88,7 @@ export class DiagnosticBar implements Disposable {
   public textDocumentClosedListener(uri: Uri): void {
     if (this._currentDiagnostics.has(uri.path)) {
       this._currentDiagnostics.delete(uri.path);
+      this._gutterDecorator.removeForTextDocument(this._currentDocURI);
       this.hide();
     }
   }
@@ -137,6 +132,7 @@ export class DiagnosticBar implements Disposable {
       const activeEditor = window.activeTextEditor;
 
       if (!!activeEditor) {
+        this._gutterDecorator.showGutterIconsForDocument(this._currentDocURI);
         this.updateStatusbarMessage(activeEditor.selection.active.line);
       }
     } else {
@@ -152,21 +148,36 @@ export class DiagnosticBar implements Disposable {
 
   private diagnosticChangedListener(diagnostic: DiagnosticChangeEvent): void {
     for (const uri of diagnostic.uris) {
-      const issues = languages.getDiagnostics(uri);
-      const dMessage: IDiagnosticMessage[] = issues.map((e) => {
-        return {
-          line: e.range.start.line,
-          severity: e.severity,
-          source: e.source || '',
-          message: e.message,
-        };
-      });
-
-      this._currentDiagnostics.set(uri.path, dMessage);
+      this.updateDiagnosticList(uri);
     }
 
     if (!this._isActive) { return; }
-    if (window.activeTextEditor) { this.updateStatusbarMessage(window.activeTextEditor.selection.active.line); }
+    if (window.activeTextEditor) {
+      this._gutterDecorator.showGutterIconsForDocument(this._currentDocURI);
+      this.updateStatusbarMessage(window.activeTextEditor.selection.active.line);
+    }
+  }
+
+  private updateDiagnosticList(uri: Uri): void {
+    const gutterIcons: IGutterItem[] = [];
+    const issues = languages.getDiagnostics(uri);
+    const dMessage: IDiagnosticMessage[] = issues.map((e) => {
+
+      gutterIcons.push({
+        icon: this._gutterDecorator.getDecorator(e.severity),
+        range: e.range,
+      });
+
+      return {
+        line: e.range.start.line,
+        severity: e.severity,
+        source: e.source || '',
+        message: e.message,
+      };
+    });
+
+    this._gutterDecorator.updateForTextDocument(uri, gutterIcons);
+    this._currentDiagnostics.set(uri.path, dMessage);
   }
 
   private updateStatusbarMessage(cursorLine: number): void {

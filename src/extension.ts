@@ -1,4 +1,5 @@
 import { DiagnosticBar } from './DiagnosticBar';
+import { DiagnosticGutter } from './DiagnosticGutter';
 import {
   ExtensionContext,
   commands,
@@ -9,12 +10,33 @@ import {
   StatusBarAlignment,
   TextEditorSelectionChangeEvent,
   ConfigurationChangeEvent,
+  DiagnosticSeverity,
 } from 'vscode';
 
 
 export function activate(context: ExtensionContext) {
   const settings = workspace.getConfiguration('statusbarerror');
-  const diagnosticBar = new DiagnosticBar(window.createStatusBarItem(StatusBarAlignment.Left, -1));
+  const gutterDecorators = new Map()
+    .set(
+      DiagnosticSeverity.Error,
+      window.createTextEditorDecorationType({
+        isWholeLine: settings.get('gutter.wholeLine') || false,
+        backgroundColor: settings.get('gutter.wholeLine.color.error') || '',
+        gutterIconPath: `${context.extensionPath}/images/error.svg`,
+      }),
+    ).set(
+      DiagnosticSeverity.Warning,
+      window.createTextEditorDecorationType({
+        isWholeLine: settings.get('gutter.wholeLine') || false,
+        backgroundColor: settings.get('gutter.wholeLine.color.error') || '',
+        gutterIconPath: `${context.extensionPath}/images/warn.svg`,
+      }),
+    );
+
+  const diagnosticBar = new DiagnosticBar(
+    window.createStatusBarItem(StatusBarAlignment.Left, -1),
+    new DiagnosticGutter(gutterDecorators),
+  );
 
   diagnosticBar.setColors(
     settings.get('color.info') || '#41e086',
@@ -29,6 +51,11 @@ export function activate(context: ExtensionContext) {
     settings.get('icon.warning') || '',
     settings.get('icon.error') || '',
   );
+
+  // TODO gutter settings
+  // diagnosticBar.setGutters(
+  //   settings.get('showGutter') || false,
+  // );
 
   context.subscriptions.push(window.onDidChangeActiveTextEditor((editor: TextEditor | undefined) => {
     diagnosticBar.hide();
