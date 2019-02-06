@@ -16,20 +16,30 @@ import {
 
 export function activate(context: ExtensionContext) {
   const settings = workspace.getConfiguration('statusbarerror');
+
+  // TODO wholeLine and color from settings for each one
   const gutterDecorators = new Map()
     .set(
       DiagnosticSeverity.Error,
       window.createTextEditorDecorationType({
-        isWholeLine: settings.get('gutter.wholeLine') || false,
-        backgroundColor: settings.get('gutter.wholeLine.color.error') || '',
         gutterIconPath: `${context.extensionPath}/images/error.svg`,
       }),
     ).set(
       DiagnosticSeverity.Warning,
       window.createTextEditorDecorationType({
-        isWholeLine: settings.get('gutter.wholeLine') || false,
-        backgroundColor: settings.get('gutter.wholeLine.color.error') || '',
         gutterIconPath: `${context.extensionPath}/images/warn.svg`,
+      }),
+    ).set(
+      DiagnosticSeverity.Information,
+      window.createTextEditorDecorationType({
+        gutterIconSize: '80%',
+        gutterIconPath: `${context.extensionPath}/images/info.svg`,
+      }),
+    ).set(
+      DiagnosticSeverity.Hint,
+      window.createTextEditorDecorationType({
+        gutterIconSize: '80%',
+        gutterIconPath: `${context.extensionPath}/images/info.svg`,
       }),
     );
 
@@ -53,8 +63,9 @@ export function activate(context: ExtensionContext) {
   );
 
   // TODO gutter settings
-  // diagnosticBar.setGutters(
-  //   settings.get('showGutter') || false,
+  // diagnosticBar.setGutterDecorator(
+  //   settings.get('gutter.show') || true,
+  //   settings.get('gutter.wholeLine') || false,
   // );
 
   context.subscriptions.push(window.onDidChangeActiveTextEditor((editor: TextEditor | undefined) => {
@@ -85,6 +96,11 @@ export function activate(context: ExtensionContext) {
         _settings.get('icon.hint') || '',
         _settings.get('icon.warning') || '',
         _settings.get('icon.error') || '',
+      );
+
+      diagnosticBar.setGutterDecorator(
+        _settings.get('gutter.show') || true,
+        settings.get('gutter.wholeLine') || false,
       );
     }
   }));

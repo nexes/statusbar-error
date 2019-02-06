@@ -20,16 +20,21 @@ export class DiagnosticGutter implements Disposable {
   private _defaultGutterDecoration: TextEditorDecorationType;
   private _gutterItems: Map<string, IGutterItem[]>;
   private _disposables: Disposable[];
+  private _gutterShow: boolean;
+  private _wholeLine: boolean;
 
   constructor(gutter: Map<DiagnosticSeverity, TextEditorDecorationType>) {
     this._gutterDecorations = gutter;
     this._gutterItems = new Map();
     this._disposables = [];
+    this._gutterShow = true;
+    this._wholeLine = false;
 
     // this will act as our default gutter icon for the time being
     this._defaultGutterDecoration = window.createTextEditorDecorationType({
       isWholeLine: false,
-      gutterIconPath: `${extensions.getExtension('JoeBerria.statusbarerror')!.extensionPath}/images/error.svg`,
+      gutterIconSize: '80%',
+      gutterIconPath: `${extensions.getExtension('JoeBerria.statusbarerror')!.extensionPath}/images/info.svg`,
     });
 
     for (const [ , value ] of this._gutterDecorations) {
@@ -44,6 +49,8 @@ export class DiagnosticGutter implements Disposable {
   }
 
   public showGutterIconsForDocument(uri: Uri): void {
+    if (!this._gutterShow) { return; }
+
     if (!!window.activeTextEditor) {
       const gutterItems = this._gutterItems.get(uri.path);
 
@@ -75,5 +82,10 @@ export class DiagnosticGutter implements Disposable {
 
   public getDecorator(severity: DiagnosticSeverity): TextEditorDecorationType {
     return this._gutterDecorations.get(severity) || this._defaultGutterDecoration;
+  }
+
+  public updateSettings(show: boolean, wholeLine: boolean): void {
+    this._gutterShow = show;
+    this._wholeLine = wholeLine;
   }
 }

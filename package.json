@@ -13,7 +13,12 @@
   "displayName": "Statusbar error",
   "keywords": [
     "diagnostic",
-    "statusbar"
+    "statusbar",
+    "gutter",
+    "decorator",
+    "error",
+    "warning",
+    "lint"
   ],
   "categories": [
     "Other"
@@ -70,11 +75,6 @@
           "type": "string",
           "default": "⭐️",
           "description": "Unicode icon for linter hints"
-        },
-        "statusbarerror.showGutter": {
-          "type": "boolean",
-          "default": true,
-          "description": "Show icons in the gutter"
         }
       }
     },
@@ -95,8 +95,8 @@
   },
   "devDependencies": {
     "typescript": "^3.3.1",
-    "vscode": "^1.1.27",
-    "@types/node": "^10.12.18"
+    "@types/node": "^10.12.18",
+    "vscode": "^1.1.27"
   },
   "license": "MIT"
 }

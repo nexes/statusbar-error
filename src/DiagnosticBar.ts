@@ -111,6 +111,11 @@ export class DiagnosticBar implements Disposable {
     };
   }
 
+  public setGutterDecorator(show: boolean, wholeLine: boolean): void {
+    this._gutterDecorator.updateSettings(show, wholeLine);
+    this._gutterDecorator.showGutterIconsForDocument(this._currentDocURI);
+  }
+
   public hide(): void {
     if (!this._hidden) {
       this._hidden = true;
