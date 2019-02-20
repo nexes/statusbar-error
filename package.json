@@ -75,6 +75,11 @@
           "type": "string",
           "default": "⭐️",
           "description": "Unicode icon for linter hints"
+        },
+        "statusbarerror.gutter.show": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show a gutter icon decoration"
         }
       }
     },

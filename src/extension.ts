@@ -62,11 +62,9 @@ export function activate(context: ExtensionContext) {
     settings.get('icon.error') || '',
   );
 
-  // TODO gutter settings
-  // diagnosticBar.setGutterDecorator(
-  //   settings.get('gutter.show') || true,
-  //   settings.get('gutter.wholeLine') || false,
-  // );
+  diagnosticBar.setGutterDecorator(
+    settings.get('gutter.show'),
+  );
 
   context.subscriptions.push(window.onDidChangeActiveTextEditor((editor: TextEditor | undefined) => {
     diagnosticBar.hide();
@@ -99,8 +97,7 @@ export function activate(context: ExtensionContext) {
       );
 
       diagnosticBar.setGutterDecorator(
-        _settings.get('gutter.show') || true,
-        settings.get('gutter.wholeLine') || false,
+        _settings.get('gutter.show'),
       );
     }
   }));

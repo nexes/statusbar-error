@@ -21,14 +21,12 @@ export class DiagnosticGutter implements Disposable {
   private _gutterItems: Map<string, IGutterItem[]>;
   private _disposables: Disposable[];
   private _gutterShow: boolean;
-  private _wholeLine: boolean;
 
   constructor(gutter: Map<DiagnosticSeverity, TextEditorDecorationType>) {
     this._gutterDecorations = gutter;
     this._gutterItems = new Map();
     this._disposables = [];
     this._gutterShow = true;
-    this._wholeLine = false;
 
     // this will act as our default gutter icon for the time being
     this._defaultGutterDecoration = window.createTextEditorDecorationType({
@@ -53,9 +51,9 @@ export class DiagnosticGutter implements Disposable {
 
     if (!!window.activeTextEditor) {
       const gutterItems = this._gutterItems.get(uri.path);
-
       const errorOptions: DecorationOptions[] = [];
       const warningOptions: DecorationOptions[] = [];
+
       if (!!gutterItems) {
         for (const gutterItem of gutterItems) {
           if (gutterItem.icon === this._gutterDecorations.get(DiagnosticSeverity.Error)) {
@@ -66,8 +64,10 @@ export class DiagnosticGutter implements Disposable {
           }
         }
 
-        window.activeTextEditor.setDecorations(this.getDecorator(DiagnosticSeverity.Error), errorOptions);
-        window.activeTextEditor.setDecorations(this.getDecorator(DiagnosticSeverity.Warning), warningOptions);
+        if (this._gutterShow) {
+          window.activeTextEditor.setDecorations(this.getDecorator(DiagnosticSeverity.Error), errorOptions);
+          window.activeTextEditor.setDecorations(this.getDecorator(DiagnosticSeverity.Warning), warningOptions);
+        }
       }
     }
   }
@@ -84,8 +84,7 @@ export class DiagnosticGutter implements Disposable {
     return this._gutterDecorations.get(severity) || this._defaultGutterDecoration;
   }
 
-  public updateSettings(show: boolean, wholeLine: boolean): void {
+  public updateSettings(show: boolean): void {
     this._gutterShow = show;
-    this._wholeLine = wholeLine;
   }
 }
