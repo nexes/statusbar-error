@@ -1,5 +1,6 @@
 import { DiagnosticBar } from './DiagnosticBar';
 import { DiagnosticGutter } from './DiagnosticGutter';
+import { DiagnosticLine } from './DiagnosticLine';
 import {
   ExtensionContext,
   commands,
@@ -17,35 +18,10 @@ import {
 export function activate(context: ExtensionContext) {
   const settings = workspace.getConfiguration('statusbarerror');
 
-  // TODO wholeLine and color from settings for each one
-  const gutterDecorators = new Map()
-    .set(
-      DiagnosticSeverity.Error,
-      window.createTextEditorDecorationType({
-        gutterIconPath: `${context.extensionPath}/images/error.svg`,
-      }),
-    ).set(
-      DiagnosticSeverity.Warning,
-      window.createTextEditorDecorationType({
-        gutterIconPath: `${context.extensionPath}/images/warn.svg`,
-      }),
-    ).set(
-      DiagnosticSeverity.Information,
-      window.createTextEditorDecorationType({
-        gutterIconSize: '80%',
-        gutterIconPath: `${context.extensionPath}/images/info.svg`,
-      }),
-    ).set(
-      DiagnosticSeverity.Hint,
-      window.createTextEditorDecorationType({
-        gutterIconSize: '80%',
-        gutterIconPath: `${context.extensionPath}/images/info.svg`,
-      }),
-    );
-
   const diagnosticBar = new DiagnosticBar(
     window.createStatusBarItem(StatusBarAlignment.Left, -1),
-    new DiagnosticGutter(gutterDecorators),
+    new DiagnosticGutter(),
+    new DiagnosticLine(),
   );
 
   diagnosticBar.setColors(
@@ -62,9 +38,8 @@ export function activate(context: ExtensionContext) {
     settings.get('icon.error') || '',
   );
 
-  diagnosticBar.setGutterDecorator(
-    settings.get('gutter.show'),
-  );
+  diagnosticBar.setWholeLine(settings.get('gutter.wholeLine'));
+  diagnosticBar.setGutterDecorator(settings.get('gutter.show'));
 
   context.subscriptions.push(window.onDidChangeActiveTextEditor((editor: TextEditor | undefined) => {
     diagnosticBar.hide();

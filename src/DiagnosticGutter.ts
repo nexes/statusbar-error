@@ -22,15 +22,39 @@ export class DiagnosticGutter implements Disposable {
   private _disposables: Disposable[];
   private _gutterShow: boolean;
 
-  constructor(gutter: Map<DiagnosticSeverity, TextEditorDecorationType>) {
-    this._gutterDecorations = gutter;
+  constructor() {
+    const dirPath = extensions.getExtension('JoeBerria.statusbarerror')!.extensionPath;
+
     this._gutterItems = new Map();
     this._disposables = [];
     this._gutterShow = true;
+    this._gutterDecorations = new Map()
+      .set(
+        DiagnosticSeverity.Error,
+        window.createTextEditorDecorationType({
+          gutterIconPath: `${dirPath}/images/error.svg`,
+        }),
+      ).set(
+        DiagnosticSeverity.Warning,
+        window.createTextEditorDecorationType({
+          gutterIconPath: `${dirPath}/images/warn.svg`,
+        }),
+      ).set(
+        DiagnosticSeverity.Information,
+        window.createTextEditorDecorationType({
+          gutterIconSize: '80%',
+          gutterIconPath: `${dirPath}/images/info.svg`,
+        }),
+      ).set(
+        DiagnosticSeverity.Hint,
+        window.createTextEditorDecorationType({
+          gutterIconSize: '80%',
+          gutterIconPath: `${dirPath}/images/info.svg`,
+        }),
+      );
 
     // this will act as our default gutter icon for the time being
     this._defaultGutterDecoration = window.createTextEditorDecorationType({
-      isWholeLine: false,
       gutterIconSize: '80%',
       gutterIconPath: `${extensions.getExtension('JoeBerria.statusbarerror')!.extensionPath}/images/info.svg`,
     });
