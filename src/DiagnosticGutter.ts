@@ -77,6 +77,8 @@ export class DiagnosticGutter implements Disposable {
       const gutterItems = this._gutterItems.get(uri.path);
       const errorOptions: DecorationOptions[] = [];
       const warningOptions: DecorationOptions[] = [];
+      const hintOptions: DecorationOptions[] = [];
+      const infoOptions: DecorationOptions[] = [];
 
       if (!!gutterItems) {
         for (const gutterItem of gutterItems) {
@@ -86,11 +88,19 @@ export class DiagnosticGutter implements Disposable {
           if (gutterItem.icon === this._gutterDecorations.get(DiagnosticSeverity.Warning)) {
             warningOptions.push({ range: gutterItem.range });
           }
+          if (gutterItem.icon === this._gutterDecorations.get(DiagnosticSeverity.Hint)) {
+            hintOptions.push({ range: gutterItem.range });
+          }
+          if (gutterItem.icon === this._gutterDecorations.get(DiagnosticSeverity.Information)) {
+            infoOptions.push({ range: gutterItem.range });
+          }
         }
 
         if (this._gutterShow) {
           window.activeTextEditor.setDecorations(this.getDecorator(DiagnosticSeverity.Error), errorOptions);
           window.activeTextEditor.setDecorations(this.getDecorator(DiagnosticSeverity.Warning), warningOptions);
+          window.activeTextEditor.setDecorations(this.getDecorator(DiagnosticSeverity.Hint), hintOptions);
+          window.activeTextEditor.setDecorations(this.getDecorator(DiagnosticSeverity.Information), infoOptions);
         }
       }
     }
