@@ -55,7 +55,7 @@ export class DiagnosticGutter implements Disposable {
 
     // this will act as our default gutter icon for the time being
     this._defaultGutterDecoration = window.createTextEditorDecorationType({
-      gutterIconSize: '80%',
+      gutterIconSize: '60%',
       gutterIconPath: `${extensions.getExtension('JoeBerria.statusbarerror')!.extensionPath}/images/info.svg`,
     });
 
@@ -73,36 +73,32 @@ export class DiagnosticGutter implements Disposable {
   public showGutterIconsForDocument(uri: Uri): void {
     if (!this._gutterShow) { return; }
 
-    if (!!window.activeTextEditor) {
-      const gutterItems = this._gutterItems.get(uri.path);
+    const gutterItems = this._gutterItems.get(uri.path);
+    if (!!window.activeTextEditor && !!gutterItems) {
       const errorOptions: DecorationOptions[] = [];
       const warningOptions: DecorationOptions[] = [];
       const hintOptions: DecorationOptions[] = [];
       const infoOptions: DecorationOptions[] = [];
 
-      if (!!gutterItems) {
-        for (const gutterItem of gutterItems) {
-          if (gutterItem.icon === this._gutterDecorations.get(DiagnosticSeverity.Error)) {
-            errorOptions.push({ range: gutterItem.range });
-          }
-          if (gutterItem.icon === this._gutterDecorations.get(DiagnosticSeverity.Warning)) {
-            warningOptions.push({ range: gutterItem.range });
-          }
-          if (gutterItem.icon === this._gutterDecorations.get(DiagnosticSeverity.Hint)) {
-            hintOptions.push({ range: gutterItem.range });
-          }
-          if (gutterItem.icon === this._gutterDecorations.get(DiagnosticSeverity.Information)) {
-            infoOptions.push({ range: gutterItem.range });
-          }
+      for (const gutterItem of gutterItems) {
+        if (gutterItem.icon === this._gutterDecorations.get(DiagnosticSeverity.Error)) {
+          errorOptions.push({ range: gutterItem.range });
         }
-
-        if (this._gutterShow) {
-          window.activeTextEditor.setDecorations(this.getDecorator(DiagnosticSeverity.Error), errorOptions);
-          window.activeTextEditor.setDecorations(this.getDecorator(DiagnosticSeverity.Warning), warningOptions);
-          window.activeTextEditor.setDecorations(this.getDecorator(DiagnosticSeverity.Hint), hintOptions);
-          window.activeTextEditor.setDecorations(this.getDecorator(DiagnosticSeverity.Information), infoOptions);
+        if (gutterItem.icon === this._gutterDecorations.get(DiagnosticSeverity.Warning)) {
+          warningOptions.push({ range: gutterItem.range });
+        }
+        if (gutterItem.icon === this._gutterDecorations.get(DiagnosticSeverity.Hint)) {
+          hintOptions.push({ range: gutterItem.range });
+        }
+        if (gutterItem.icon === this._gutterDecorations.get(DiagnosticSeverity.Information)) {
+          infoOptions.push({ range: gutterItem.range });
         }
       }
+
+      window.activeTextEditor.setDecorations(this.getDecorator(DiagnosticSeverity.Error), errorOptions);
+      window.activeTextEditor.setDecorations(this.getDecorator(DiagnosticSeverity.Warning), warningOptions);
+      window.activeTextEditor.setDecorations(this.getDecorator(DiagnosticSeverity.Hint), hintOptions);
+      window.activeTextEditor.setDecorations(this.getDecorator(DiagnosticSeverity.Information), infoOptions);
     }
   }
 

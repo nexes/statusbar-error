@@ -80,6 +80,21 @@
           "type": "boolean",
           "default": true,
           "description": "Show a gutter icon decoration"
+        },
+        "statusbarerror.wholeLine.show": {
+          "type": "boolean",
+          "default": false,
+          "description": "Highlight the whole line"
+        },
+        "statusbarerror.wholeLine.errorColor": {
+          "type": "string",
+          "default": "#3c0000aa",
+          "description": "Color of the line when an error is found"
+        },
+        "statusbarerror.wholeLine.warningColor": {
+          "type": "string",
+          "default": "#003e3eaa",
+          "description": "Color of the line when a warning is found"
         }
       }
     },

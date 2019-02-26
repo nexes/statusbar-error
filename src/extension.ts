@@ -11,7 +11,6 @@ import {
   StatusBarAlignment,
   TextEditorSelectionChangeEvent,
   ConfigurationChangeEvent,
-  DiagnosticSeverity,
 } from 'vscode';
 
 
@@ -24,22 +23,29 @@ export function activate(context: ExtensionContext) {
     new DiagnosticLine(),
   );
 
+  // start reading the user settings and set initial colors, icons, and gutter settings.
   diagnosticBar.setColors(
-    settings.get('color.info') || '#41e086',
-    settings.get('color.hint') || '#35b1f4',
-    settings.get('color.warning') || '#f4b81f',
-    settings.get('color.error') || '#f41f1f',
+    settings.get('color.info', '#41e086'),
+    settings.get('color.hint', '#35b1f4'),
+    settings.get('color.warning', '#f4b81f'),
+    settings.get('color.error', '#f41f1f'),
   );
 
   diagnosticBar.setIcons(
-    settings.get('icon.info') || '',
-    settings.get('icon.hint') || '',
-    settings.get('icon.warning') || '',
-    settings.get('icon.error') || '',
+    settings.get('icon.info', ''),
+    settings.get('icon.hint', ''),
+    settings.get('icon.warning', ''),
+    settings.get('icon.error', ''),
   );
 
-  diagnosticBar.setWholeLine(settings.get('gutter.wholeLine'));
+  diagnosticBar.setWholeLine(
+    settings.get('wholeLine.show', false),
+    settings.get('wholeLine.errorColor', '#3c0000aa'),
+    settings.get('wholeLine.warningColor', '#003e3eaa'),
+  );
+
   diagnosticBar.setGutterDecorator(settings.get('gutter.show'));
+  // done reading the user settings and set initial colors, icons, and gutter settings.
 
   context.subscriptions.push(window.onDidChangeActiveTextEditor((editor: TextEditor | undefined) => {
     diagnosticBar.hide();
@@ -58,22 +64,26 @@ export function activate(context: ExtensionContext) {
       const _settings = workspace.getConfiguration('statusbarerror');
 
       diagnosticBar.setColors(
-        _settings.get('color.info') || '#41e086',
-        _settings.get('color.hint') || '#35b1f4',
-        _settings.get('color.warning') || '#f4b81f',
-        _settings.get('color.error') || '#f41f1f',
+        _settings.get('color.info', '#41e086'),
+        _settings.get('color.hint', '#35b1f4'),
+        _settings.get('color.warning', '#f4b81f'),
+        _settings.get('color.error', '#f41f1f'),
       );
 
       diagnosticBar.setIcons(
-        _settings.get('icon.info') || '',
-        _settings.get('icon.hint') || '',
-        _settings.get('icon.warning') || '',
-        _settings.get('icon.error') || '',
+        _settings.get('icon.info', ''),
+        _settings.get('icon.hint', ''),
+        _settings.get('icon.warning', ''),
+        _settings.get('icon.error', ''),
       );
 
-      diagnosticBar.setGutterDecorator(
-        _settings.get('gutter.show'),
+      diagnosticBar.setWholeLine(
+        _settings.get('wholeLine.show', false),
+        _settings.get('wholeLine.errorColor', '#3c0000aa'),
+        _settings.get('wholeLine.warningColor', '#003e3eaa'),
       );
+
+      diagnosticBar.setGutterDecorator(_settings.get('gutter.show'));
     }
   }));
 

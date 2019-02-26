@@ -1,4 +1,5 @@
 import { DiagnosticGutter, IGutterItem } from './DiagnosticGutter';
+import { DiagnosticLine, ILineOptions } from './DiagnosticLine';
 import {
   Uri,
   window,
@@ -42,14 +43,16 @@ export class DiagnosticBar implements Disposable {
   private _currentColors: IDiagnosticColor;
   private _currentIcons: IDiagnosticIcon;
   private _gutterDecorator: DiagnosticGutter;
+  private _lineDecorator: DiagnosticLine;
 
-  constructor(item: StatusBarItem, gutterDecorator: DiagnosticGutter) {
+  constructor(item: StatusBarItem, gutterDecorator: DiagnosticGutter, lineDecorator: DiagnosticLine) {
     this._hidden = false;
     this._isActive = true;
     this._disposables = [];
     this._statusBarItem = item;
     this._currentDiagnostics = new Map();
     this._gutterDecorator = gutterDecorator;
+    this._lineDecorator = lineDecorator;
     this._currentDocURI = window.activeTextEditor ? window.activeTextEditor.document.uri : Uri.file('.');
     this._currentColors = {
       warning: '#f4b81f',
@@ -65,6 +68,7 @@ export class DiagnosticBar implements Disposable {
     };
 
     this._disposables.push(this._gutterDecorator);
+    this._disposables.push(this._lineDecorator);
     this._disposables.push(Disposable.from(this._statusBarItem));
     this._disposables.push(languages.onDidChangeDiagnostics((e) => this.diagnosticChangedListener(e)));
   }
@@ -75,6 +79,7 @@ export class DiagnosticBar implements Disposable {
 
     if (!this._isActive) { return; }
     this._gutterDecorator.showGutterIconsForDocument(this._currentDocURI);
+    this._lineDecorator.showLineDecoratorForDocument(this._currentDocURI);
     this.updateStatusbarMessage(editor.selection.active.line);
   }
 
@@ -89,6 +94,7 @@ export class DiagnosticBar implements Disposable {
     if (this._currentDiagnostics.has(uri.path)) {
       this._currentDiagnostics.delete(uri.path);
       this._gutterDecorator.removeForTextDocument(this._currentDocURI);
+      this._lineDecorator.removeForTextDocument(this._currentDocURI);
       this.hide();
     }
   }
@@ -119,6 +125,14 @@ export class DiagnosticBar implements Disposable {
     }
   }
 
+  public setWholeLine(show: boolean | undefined, errorColor: string, warnColor: string): void {
+    // this will really never be undefined
+    if (show !== undefined) {
+      this._lineDecorator.updateSettings(show, errorColor, warnColor);
+      this._lineDecorator.showLineDecoratorForDocument(this._currentDocURI);
+    }
+  }
+
   public hide(): void {
     if (!this._hidden) {
       this._hidden = true;
@@ -141,6 +155,7 @@ export class DiagnosticBar implements Disposable {
 
       if (!!activeEditor) {
         this._gutterDecorator.showGutterIconsForDocument(this._currentDocURI);
+        this._lineDecorator.showLineDecoratorForDocument(this._currentDocURI);
         this.updateStatusbarMessage(activeEditor.selection.active.line);
       }
     } else {
@@ -162,17 +177,24 @@ export class DiagnosticBar implements Disposable {
     if (!this._isActive) { return; }
     if (window.activeTextEditor) {
       this._gutterDecorator.showGutterIconsForDocument(this._currentDocURI);
+      this._lineDecorator.showLineDecoratorForDocument(this._currentDocURI);
       this.updateStatusbarMessage(window.activeTextEditor.selection.active.line);
     }
   }
 
   private updateDiagnosticList(uri: Uri): void {
     const gutterIcons: IGutterItem[] = [];
+    const lineOpts: ILineOptions[] = [];
     const issues = languages.getDiagnostics(uri);
     const dMessage: IDiagnosticMessage[] = issues.map((e) => {
 
       gutterIcons.push({
         icon: this._gutterDecorator.getDecorator(e.severity),
+        range: e.range,
+      });
+
+      lineOpts.push({
+        severity: e.severity,
         range: e.range,
       });
 
@@ -185,6 +207,7 @@ export class DiagnosticBar implements Disposable {
     });
 
     this._gutterDecorator.updateForTextDocument(uri, gutterIcons);
+    this._lineDecorator.updateForTextDocument(uri, lineOpts);
     this._currentDiagnostics.set(uri.path, dMessage);
   }
 
