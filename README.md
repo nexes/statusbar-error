@@ -1,16 +1,25 @@
 ## Status Bar Error
 ---
-Visual Studio Code extensions that will display the linter message of the currently active line in the status bar. A gutter icon will also be displayed when when an error or warning is shown.
+Choose to display linter warnings, errors and hint messages in the statusbar. Show gutter icons or display the linter messages on the line itself. All of the colors can be set within the extensions settings. You can also turn on or off the gutter icons and the whole line messages.
+___
 
-![](./images/extensionexample.gif)
+#### Show linter messages in the statusbar and display gutter icons.
+![](./images/gutter_only.gif)
+
+#### Show linter messages on the line itself and display gutter icons.
+![](./images/gutter_wholeline.gif)
+
+___
 
 ### Install
----
 Install [StatusBarError](https://marketplace.visualstudio.com/items?itemName=JoeBerria.statusbarerror) from the Visual Studio Code extension gallery.
 
-### Options
 ---
-You can change the color of the font for Errors, Warnings, Info and Hints. You can change the message unicode icon for the different messages.
+### Options
+* Change statusbar font color
+* Turn on/off gutter icons
+* Turn on/off whole line linter messages
+* Change the color of the whole line background and font color
 
 ```json
 {
@@ -23,10 +32,6 @@ You can change the color of the font for Errors, Warnings, Info and Hints. You c
 }
 ```
 
-### More to come
-* setting to turn on or off the gutter decoration
-* setting to color the line with the error or warning
-
-### Contribute
 ---
+### Contribute
 StatusBarError's [repository](https://github.com/nexes/statusbar-error.git) is here.
