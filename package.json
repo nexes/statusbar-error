@@ -1,6 +1,6 @@
 {
   "name": "statusbarerror",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "publisher": "JoeBerria",
   "engines": {
     "vscode": "^1.27.0"
@@ -9,7 +9,7 @@
     "name": "Joe Berria",
     "email": "joeberria@gmail.com"
   },
-  "description": "Show error and warning messages in the status bar for the current line",
+  "description": "Show error and warning messages in the status bar, gutter or on the current line",
   "displayName": "Statusbar error",
   "keywords": [
     "diagnostic",
@@ -39,42 +39,42 @@
         "statusbarerror.color.warning": {
           "type": "string",
           "default": "#f4b81f",
-          "description": "Font color for linter warnings"
+          "description": "Font color for the linter warnings in the statusbar"
         },
         "statusbarerror.color.error": {
           "type": "string",
           "default": "#f41f1f",
-          "description": "Font color for linter errors"
+          "description": "Font color for the linter errors in the statusbar"
         },
         "statusbarerror.color.info": {
           "type": "string",
           "default": "#41e086",
-          "description": "Font color for linter information"
+          "description": "Font color for the linter information in the statusbar"
         },
         "statusbarerror.color.hint": {
           "type": "string",
           "default": "#35b1f4",
-          "description": "Font color for linter hints"
+          "description": "Font color for the linter hints in the statusbar"
         },
         "statusbarerror.icon.warning": {
           "type": "string",
           "default": "⭕️",
-          "description": "Unicode icon for linter warnings"
+          "description": "Unicode icon for linter warnings in the statusbar"
         },
         "statusbarerror.icon.error": {
           "type": "string",
           "default": "❌",
-          "description": "Unicode icon for linter errors"
+          "description": "Unicode icon for linter errors in the statusbar"
         },
         "statusbarerror.icon.info": {
           "type": "string",
           "default": "❓",
-          "description": "Unicode icon for linter info"
+          "description": "Unicode icon for linter info in the statusbar"
         },
         "statusbarerror.icon.hint": {
           "type": "string",
           "default": "⭐️",
-          "description": "Unicode icon for linter hints"
+          "description": "Unicode icon for linter hints in the statusbar"
         },
         "statusbarerror.gutter.show": {
           "type": "boolean",
@@ -88,13 +88,23 @@
         },
         "statusbarerror.wholeLine.errorColor": {
           "type": "string",
-          "default": "#3c0000aa",
-          "description": "Color of the line when an error is found"
+          "default": "#d32f2f88",
+          "description": "Background color of the line when an error is found"
         },
         "statusbarerror.wholeLine.warningColor": {
           "type": "string",
-          "default": "#003e3eaa",
-          "description": "Color of the line when a warning is found"
+          "default": "#ff980088",
+          "description": "Background color of the line when a warning is found"
+        },
+        "statusbarerror.wholeLine.errorFontColor": {
+          "type": "string",
+          "default": "#efefef",
+          "description": "Font color of the error line message"
+        },
+        "statusbarerror.wholeLine.warningFontColor": {
+          "type": "string",
+          "default": "#000000",
+          "description": "Font color of the warning line message"
         }
       }
     },

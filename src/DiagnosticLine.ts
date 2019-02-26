@@ -11,6 +11,7 @@ import {
 
 export interface ILineOptions {
   severity: DiagnosticSeverity;
+  message: string;
   range: Range;
 }
 
@@ -33,21 +34,29 @@ export class DiagnosticLine implements Disposable {
     }
   }
 
-  public updateSettings(show: boolean, errorColor: string, warnColor: string): void {
+  public updateSettings(show: boolean, errorColor: string, warnColor: string, errFontColor: string, warnFontColor: string): void {
     this._showLine = show;
 
     this._lineDecorators.clear();
     this._lineDecorators.set(
       DiagnosticSeverity.Error,
       window.createTextEditorDecorationType({
-        backgroundColor: errorColor,
         isWholeLine: true,
+        after: {
+          margin: '40px',
+          backgroundColor: errorColor,
+          color: errFontColor,
+        },
       }),
     ).set(
       DiagnosticSeverity.Warning,
       window.createTextEditorDecorationType({
-        backgroundColor: warnColor,
         isWholeLine: true,
+        after: {
+          margin: '40px',
+          backgroundColor: warnColor,
+          color: warnFontColor,
+        },
       }),
     );
   }
@@ -66,10 +75,10 @@ export class DiagnosticLine implements Disposable {
 
       for (const lineOpt of opts) {
         if (lineOpt.severity === DiagnosticSeverity.Error) {
-          errDecOpts.push({ range: lineOpt.range });
+          errDecOpts.push({ range: lineOpt.range, renderOptions: { after: { contentText: lineOpt.message } } });
         }
         if (lineOpt.severity === DiagnosticSeverity.Warning) {
-          warnDecOpts.push({ range: lineOpt.range });
+          warnDecOpts.push({ range: lineOpt.range, renderOptions: { after: { contentText: lineOpt.message } } });
         }
       }
 

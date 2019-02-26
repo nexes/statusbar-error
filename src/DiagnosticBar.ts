@@ -125,10 +125,10 @@ export class DiagnosticBar implements Disposable {
     }
   }
 
-  public setWholeLine(show: boolean | undefined, errorColor: string, warnColor: string): void {
+  public setWholeLine(show: boolean | undefined, errorColor: string, warnColor: string, errorFontColor: string, warnFontColor: string): void {
     // this will really never be undefined
     if (show !== undefined) {
-      this._lineDecorator.updateSettings(show, errorColor, warnColor);
+      this._lineDecorator.updateSettings(show, errorColor, warnColor, errorFontColor, warnFontColor);
       this._lineDecorator.showLineDecoratorForDocument(this._currentDocURI);
     }
   }
@@ -195,6 +195,7 @@ export class DiagnosticBar implements Disposable {
 
       lineOpts.push({
         severity: e.severity,
+        message: e.message,
         range: e.range,
       });
 
