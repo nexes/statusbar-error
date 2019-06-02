@@ -3,7 +3,6 @@ import { DiagnosticGutter } from './DiagnosticGutter';
 import { DiagnosticLine } from './DiagnosticLine';
 import {
   ExtensionContext,
-  commands,
   window,
   workspace,
   TextEditor,
@@ -95,11 +94,6 @@ export function activate(context: ExtensionContext) {
     diagnosticBar.textDocumentClosedListener(editor.uri);
   }));
 
-  const toggleCmd = commands.registerCommand('sb.toggle', () => {
-    diagnosticBar.toggleActive();
-  });
-
-  context.subscriptions.push(toggleCmd);
   context.subscriptions.push(diagnosticBar);
 }
 

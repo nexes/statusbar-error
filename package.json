@@ -107,14 +107,7 @@
           "description": "Font color of the warning line message"
         }
       }
-    },
-    "commands": [
-      {
-        "command": "sb.toggle",
-        "title": "Toggle statusbar errors",
-        "category": "Statusbar error"
-      }
-    ]
+    }
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",

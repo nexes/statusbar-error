@@ -77,15 +77,12 @@ export class DiagnosticBar implements Disposable {
     this.updateDiagnosticList(editor.document.uri);
     this._currentDocURI = editor.document.uri;
 
-    if (!this._isActive) { return; }
     this._gutterDecorator.showGutterIconsForDocument(this._currentDocURI);
     this._lineDecorator.showLineDecoratorForDocument(this._currentDocURI);
     this.updateStatusbarMessage(editor.selection.active.line);
   }
 
   public cursorSelectionChangedListener(selection: TextEditorSelectionChangeEvent): void {
-    if (!this._isActive) { return; }
-
     const cursorLine = selection.selections[ 0 ].active.line;
     this.updateStatusbarMessage(cursorLine);
   }
@@ -174,7 +171,6 @@ export class DiagnosticBar implements Disposable {
       this.updateDiagnosticList(uri);
     }
 
-    if (!this._isActive) { return; }
     if (window.activeTextEditor) {
       this._gutterDecorator.showGutterIconsForDocument(this._currentDocURI);
       this._lineDecorator.showLineDecoratorForDocument(this._currentDocURI);
