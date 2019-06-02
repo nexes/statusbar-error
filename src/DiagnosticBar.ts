@@ -34,8 +34,7 @@ interface IDiagnosticIcon {
 }
 
 export class DiagnosticBar implements Disposable {
-  private _hidden: boolean;
-  private _isActive: boolean;
+  private _visible: boolean;
   private _statusBarItem: StatusBarItem;
   private _disposables: Disposable[];
   private _currentDocURI: Uri;
@@ -46,8 +45,7 @@ export class DiagnosticBar implements Disposable {
   private _lineDecorator: DiagnosticLine;
 
   constructor(item: StatusBarItem, gutterDecorator: DiagnosticGutter, lineDecorator: DiagnosticLine) {
-    this._hidden = false;
-    this._isActive = true;
+    this._visible = true;
     this._disposables = [];
     this._statusBarItem = item;
     this._currentDiagnostics = new Map();
@@ -92,7 +90,7 @@ export class DiagnosticBar implements Disposable {
       this._currentDiagnostics.delete(uri.path);
       this._gutterDecorator.removeForTextDocument(this._currentDocURI);
       this._lineDecorator.removeForTextDocument(this._currentDocURI);
-      this.hide();
+      this._statusBarItem.hide();
     }
   }
 
@@ -130,34 +128,17 @@ export class DiagnosticBar implements Disposable {
     }
   }
 
-  public hide(): void {
-    if (!this._hidden) {
-      this._hidden = true;
-      this._statusBarItem.hide();
-    }
+  public clearStatusBarText() {
+    this._statusBarItem.text = '';
   }
 
-  public show(): void {
-    if (this._hidden) {
-      this._hidden = false;
-      this._statusBarItem.show();
-    }
-  }
+  public setStatusBarVisibility(visible: boolean | undefined) {
+    console.log('change visibility ' + visible);
+    if (visible === undefined) { return; }
 
-  public toggleActive(): void {
-    this._isActive = !this._isActive;
-
-    if (this._isActive) {
-      const activeEditor = window.activeTextEditor;
-
-      if (!!activeEditor) {
-        this._gutterDecorator.showGutterIconsForDocument(this._currentDocURI);
-        this._lineDecorator.showLineDecoratorForDocument(this._currentDocURI);
-        this.updateStatusbarMessage(activeEditor.selection.active.line);
-      }
-    } else {
-      this.hide();
-    }
+    this._visible = visible;
+    if (!this._visible) { this._statusBarItem.hide(); }
+    if (this._visible) { this._statusBarItem.show(); }
   }
 
   public dispose(): void {
@@ -211,12 +192,12 @@ export class DiagnosticBar implements Disposable {
   private updateStatusbarMessage(cursorLine: number): void {
     const messages = this._currentDiagnostics.get(this._currentDocURI.path);
     if (!messages || messages.length === 0) {
-      this.hide();
+      this._statusBarItem.hide();
       return;
     }
 
     const lintMessage = messages.find((elem) => elem.line === cursorLine);
-    if (!!lintMessage) {
+    if (!!lintMessage && this._visible) {
       switch (lintMessage.severity) {
         case 0:
           this._statusBarItem.color = this._currentColors.error;
@@ -237,10 +218,10 @@ export class DiagnosticBar implements Disposable {
         default:
           this._statusBarItem.text = `${lintMessage.source} - ${lintMessage.message}`;
       }
-      this.show();
+      this._statusBarItem.show();
 
     } else {
-      this.hide();
+      this._statusBarItem.hide();
     }
   }
 }

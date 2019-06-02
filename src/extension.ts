@@ -46,10 +46,11 @@ export function activate(context: ExtensionContext) {
   );
 
   diagnosticBar.setGutterDecorator(settings.get('gutter.show'));
+  diagnosticBar.setStatusBarVisibility(settings.get('statusbar.show'));
   // done reading the user settings and set initial colors, icons, and gutter settings.
 
   context.subscriptions.push(window.onDidChangeActiveTextEditor((editor: TextEditor | undefined) => {
-    diagnosticBar.hide();
+    diagnosticBar.clearStatusBarText();
 
     if (!!editor) {
       diagnosticBar.activeEditorChanged(editor);
@@ -87,6 +88,7 @@ export function activate(context: ExtensionContext) {
       );
 
       diagnosticBar.setGutterDecorator(_settings.get('gutter.show'));
+      diagnosticBar.setStatusBarVisibility(_settings.get('statusbar.show'));
     }
   }));
 

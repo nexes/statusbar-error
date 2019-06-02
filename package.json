@@ -81,6 +81,11 @@
           "default": true,
           "description": "Show a gutter icon decoration"
         },
+        "statusbarerror.statusbar.show": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show the linter message in the statusbar"
+        },
         "statusbarerror.wholeLine.show": {
           "type": "boolean",
           "default": false,
