@@ -1,6 +1,8 @@
 ## Status Bar Error
 ---
-Choose to display linter warnings, errors and hint messages in the statusbar. Show gutter icons or display the linter messages on the line itself. All of the colors can be set within the extensions settings. You can also turn on or off the gutter icons and the whole line messages.
+Choose how you want errors and warnings displayed. You can choose to have linter messages
+displayed in the statusbar, on the line of the error or icons in the gutter. Colors and which gutter
+icons are displayed are all found in settings.
 ___
 
 #### Show linter messages in the statusbar and display gutter icons.
@@ -16,21 +18,13 @@ Install [StatusBarError](https://marketplace.visualstudio.com/items?itemName=Joe
 
 ---
 ### Options
-* Change statusbar font color
-* Turn on/off gutter icons
+* Change the statusbar font color
+* Change the statusbar icon per error type
+* Turn on/off the error message in the statusbar
+* Turn on/off gutter icons (select which ones to show or not show)
 * Turn on/off whole line linter messages
+* Choose how long the whole line message should be
 * Change the color of the whole line background and font color
-
-```json
-{
-  "statusbarerror.color.error": "#ff0000",
-  "statusbarerror.icon.error": "🛑",
-
-  "statusbarerror.color.info": "#00ff00",
-  "statusbarerror.icon.info": "🔥",
-  ...
-}
-```
 
 ---
 ### Contribute
