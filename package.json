@@ -36,6 +36,36 @@
     "configuration": {
       "title": "Statusbar Error Configuration",
       "properties": {
+        "statusbarerror.statusbar.show": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show the linter message in the statusbar"
+        },
+        "statusbarerror.wholeLine.show": {
+          "type": "boolean",
+          "default": false,
+          "description": "Show the linter message on the line"
+        },
+        "statusbarerror.gutter.error.show": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show a gutter icon for errors"
+        },
+        "statusbarerror.gutter.warning.show": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show a gutter icon for warnings"
+        },
+        "statusbarerror.gutter.hint.show": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show a gutter icon for hints"
+        },
+        "statusbarerror.gutter.info.show": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show a gutter icon for information"
+        },
         "statusbarerror.color.warning": {
           "type": "string",
           "default": "#f4b81f",
@@ -76,22 +106,7 @@
           "default": "⭐️",
           "description": "Unicode icon for linter hints in the statusbar"
         },
-        "statusbarerror.gutter.show": {
-          "type": "boolean",
-          "default": true,
-          "description": "Show a gutter icon decoration"
-        },
-        "statusbarerror.statusbar.show": {
-          "type": "boolean",
-          "default": true,
-          "description": "Show the linter message in the statusbar"
-        },
-        "statusbarerror.wholeLine.show": {
-          "type": "boolean",
-          "default": false,
-          "description": "Highlight the whole line"
-        },
-        "statusbarerror.wholeLine.length":  {
+        "statusbarerror.wholeLine.length": {
           "type": "number",
           "default": 0,
           "description": "Truncate whole line messages at this length (0 will not truncate)"
