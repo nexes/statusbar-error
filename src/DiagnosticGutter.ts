@@ -20,14 +20,19 @@ export class DiagnosticGutter implements Disposable {
   private _defaultGutterDecoration: TextEditorDecorationType;
   private _gutterItems: Map<string, IGutterItem[]>;
   private _disposables: Disposable[];
-  private _gutterShow: boolean;
+  private _gutterShow: Map<string, boolean>;
 
   constructor() {
     const dirPath = extensions.getExtension('JoeBerria.statusbarerror')!.extensionPath;
 
+    this._gutterShow = new Map([
+      ['error', true],
+      ['warn', true],
+      ['info`', true],
+      ['hint', true],
+    ]);
     this._gutterItems = new Map();
     this._disposables = [];
-    this._gutterShow = true;
     this._gutterDecorations = new Map()
       .set(
         DiagnosticSeverity.Error,
@@ -95,10 +100,10 @@ export class DiagnosticGutter implements Disposable {
         }
       }
 
-      window.activeTextEditor.setDecorations(this.getDecorator(DiagnosticSeverity.Error), errorOptions);
-      window.activeTextEditor.setDecorations(this.getDecorator(DiagnosticSeverity.Warning), warningOptions);
-      window.activeTextEditor.setDecorations(this.getDecorator(DiagnosticSeverity.Hint), hintOptions);
-      window.activeTextEditor.setDecorations(this.getDecorator(DiagnosticSeverity.Information), infoOptions);
+      if (this._gutterShow.get('error')) { window.activeTextEditor.setDecorations(this.getDecorator(DiagnosticSeverity.Error), errorOptions); }
+      if (this._gutterShow.get('warn')) { window.activeTextEditor.setDecorations(this.getDecorator(DiagnosticSeverity.Warning), warningOptions); }
+      if (this._gutterShow.get('hint')) { window.activeTextEditor.setDecorations(this.getDecorator(DiagnosticSeverity.Hint), hintOptions); }
+      if (this._gutterShow.get('info')) { window.activeTextEditor.setDecorations(this.getDecorator(DiagnosticSeverity.Information), infoOptions); }
     }
   }
 
@@ -114,7 +119,11 @@ export class DiagnosticGutter implements Disposable {
     return this._gutterDecorations.get(severity) || this._defaultGutterDecoration;
   }
 
-  public updateSettings(show: boolean): void {
-    this._gutterShow = show;
+  public updateSettings(showErr: boolean, showWarn: boolean, showHint: boolean, showInfo: boolean): void {
+    this._gutterShow
+      .set('error', showErr)
+      .set('warn', showWarn)
+      .set('hint', showHint)
+      .set('info', showInfo);
   }
 }

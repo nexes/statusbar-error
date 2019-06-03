@@ -46,8 +46,11 @@ export function activate(context: ExtensionContext) {
     settings.get('wholeLine.length', 0),
   );
 
-  diagnosticBar.setGutterDecorator(settings.get('gutter.show'));
-  diagnosticBar.setStatusBarVisibility(settings.get('statusbar.show'));
+  diagnosticBar.setGutterDecorator(settings.get('gutter.error.show', true),
+                                   settings.get('gutter.warning.show', true),
+                                   settings.get('gutter.hint.show', true),
+                                   settings.get('gutter.info.show', true));
+  diagnosticBar.setStatusBarVisibility(settings.get('statusbar.show', true));
   // done reading the user settings and set initial colors, icons, and gutter settings.
 
   context.subscriptions.push(window.onDidChangeActiveTextEditor((editor: TextEditor | undefined) => {
@@ -56,10 +59,6 @@ export function activate(context: ExtensionContext) {
     if (!!editor) {
       diagnosticBar.activeEditorChanged(editor);
     }
-  }));
-
-  context.subscriptions.push(window.onDidChangeTextEditorSelection((selection: TextEditorSelectionChangeEvent) => {
-    diagnosticBar.cursorSelectionChangedListener(selection);
   }));
 
   context.subscriptions.push(workspace.onDidChangeConfiguration((event: ConfigurationChangeEvent) => {
@@ -89,9 +88,16 @@ export function activate(context: ExtensionContext) {
         _settings.get('wholeLine.length', 0),
       );
 
-      diagnosticBar.setGutterDecorator(_settings.get('gutter.show'));
-      diagnosticBar.setStatusBarVisibility(_settings.get('statusbar.show'));
+      diagnosticBar.setGutterDecorator(_settings.get('gutter.error.show', true),
+                                       _settings.get('gutter.warning.show', true),
+                                       _settings.get('gutter.hint.show', true),
+                                       _settings.get('gutter.info.show', true));
+      diagnosticBar.setStatusBarVisibility(_settings.get('statusbar.show', true));
     }
+  }));
+
+  context.subscriptions.push(window.onDidChangeTextEditorSelection((selection: TextEditorSelectionChangeEvent) => {
+    diagnosticBar.cursorSelectionChangedListener(selection);
   }));
 
   context.subscriptions.push(workspace.onDidCloseTextDocument((editor: TextDocument) => {

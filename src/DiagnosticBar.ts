@@ -112,35 +112,23 @@ export class DiagnosticBar implements Disposable {
     };
   }
 
-  public setGutterDecorator(show: boolean | undefined): void {
-    // this will really never be undefined
-    if (show !== undefined) {
-      this._gutterDecorator.updateSettings(show);
-      this._gutterDecorator.showGutterIconsForDocument(this._currentDocURI);
-    }
+  public setGutterDecorator(showErr: boolean, showWarn: boolean, showHint: boolean, showInfo: boolean): void {
+    this._gutterDecorator.updateSettings(showErr, showWarn, showHint, showInfo);
+    this._gutterDecorator.showGutterIconsForDocument(this._currentDocURI);
   }
 
-  public setWholeLine(show: boolean | undefined,
-                      errorColor: string,
-                      warnColor: string,
-                      errorFontColor: string,
-                      warnFontColor: string,
-                      length: number): void {
-    // this will really never be undefined
-    if (show !== undefined) {
-      this._lineDecorator.updateSettings(show, errorColor, warnColor, errorFontColor, warnFontColor, length);
-      this._lineDecorator.showLineDecoratorForDocument(this._currentDocURI);
-    }
+  public setWholeLine(show: boolean, errorColor: string, warnColor: string, errorFontColor: string, warnFontColor: string, length: number): void {
+    this._lineDecorator.updateSettings(show, errorColor, warnColor, errorFontColor, warnFontColor, length);
+    this._lineDecorator.showLineDecoratorForDocument(this._currentDocURI);
   }
 
   public clearStatusBarText() {
     this._statusBarItem.text = '';
   }
 
-  public setStatusBarVisibility(visible: boolean | undefined) {
-    if (visible === undefined) { return; }
-
+  public setStatusBarVisibility(visible: boolean) {
     this._visible = visible;
+
     if (!this._visible) { this._statusBarItem.hide(); }
     if (this._visible) { this._statusBarItem.show(); }
   }
