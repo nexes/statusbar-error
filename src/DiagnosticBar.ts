@@ -120,10 +120,15 @@ export class DiagnosticBar implements Disposable {
     }
   }
 
-  public setWholeLine(show: boolean | undefined, errorColor: string, warnColor: string, errorFontColor: string, warnFontColor: string): void {
+  public setWholeLine(show: boolean | undefined,
+                      errorColor: string,
+                      warnColor: string,
+                      errorFontColor: string,
+                      warnFontColor: string,
+                      length: number): void {
     // this will really never be undefined
     if (show !== undefined) {
-      this._lineDecorator.updateSettings(show, errorColor, warnColor, errorFontColor, warnFontColor);
+      this._lineDecorator.updateSettings(show, errorColor, warnColor, errorFontColor, warnFontColor, length);
       this._lineDecorator.showLineDecoratorForDocument(this._currentDocURI);
     }
   }
@@ -133,7 +138,6 @@ export class DiagnosticBar implements Disposable {
   }
 
   public setStatusBarVisibility(visible: boolean | undefined) {
-    console.log('change visibility ' + visible);
     if (visible === undefined) { return; }
 
     this._visible = visible;

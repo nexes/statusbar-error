@@ -91,6 +91,11 @@
           "default": false,
           "description": "Highlight the whole line"
         },
+        "statusbarerror.wholeLine.length":  {
+          "type": "number",
+          "default": 0,
+          "description": "Truncate whole line messages at this length (0 will not truncate)"
+        },
         "statusbarerror.wholeLine.errorColor": {
           "type": "string",
           "default": "#d32f2f88",

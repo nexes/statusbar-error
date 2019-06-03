@@ -21,12 +21,14 @@ export class DiagnosticLine implements Disposable {
   private _defaultGutterDecoration: TextEditorDecorationType;
   private _disposables: Disposable[];
   private _showLine: boolean;
+  private _maxLineLength: number;
 
   constructor() {
     this._lineDecorators = new Map();
     this._lineDecoratorOpt = new Map();
     this._showLine = false;
     this._disposables = [];
+    this._maxLineLength = 0;
     this._defaultGutterDecoration = window.createTextEditorDecorationType({});
 
     for (const [ , value ] of this._lineDecorators) {
@@ -34,10 +36,16 @@ export class DiagnosticLine implements Disposable {
     }
   }
 
-  public updateSettings(show: boolean, errorColor: string, warnColor: string, errFontColor: string, warnFontColor: string): void {
+  public updateSettings(show: boolean,
+                        errorColor: string,
+                        warnColor: string,
+                        errFontColor: string,
+                        warnFontColor: string,
+                        length: number): void {
     this._showLine = show;
-
+    this._maxLineLength = length;
     this._lineDecorators.clear();
+
     this._lineDecorators.set(
       DiagnosticSeverity.Error,
       window.createTextEditorDecorationType({
@@ -69,16 +77,23 @@ export class DiagnosticLine implements Disposable {
     if (!this._showLine) { return; }
 
     const opts = this._lineDecoratorOpt.get(uri.path);
+
     if (!!opts && !!window.activeTextEditor) {
       const errDecOpts: DecorationOptions[] = [];
       const warnDecOpts: DecorationOptions[] = [];
 
       for (const lineOpt of opts) {
+        let message = lineOpt.message;
+
+        if (this._maxLineLength > 0 && message.length > this._maxLineLength) {
+          message = message.substring(0, this._maxLineLength) + '...';
+        }
+
         if (lineOpt.severity === DiagnosticSeverity.Error) {
-          errDecOpts.push({ range: lineOpt.range, renderOptions: { after: { contentText: lineOpt.message } } });
+          errDecOpts.push({ range: lineOpt.range, renderOptions: { after: { contentText: message } } });
         }
         if (lineOpt.severity === DiagnosticSeverity.Warning) {
-          warnDecOpts.push({ range: lineOpt.range, renderOptions: { after: { contentText: lineOpt.message } } });
+          warnDecOpts.push({ range: lineOpt.range, renderOptions: { after: { contentText: message } } });
         }
       }
 

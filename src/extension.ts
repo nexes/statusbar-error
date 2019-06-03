@@ -43,6 +43,7 @@ export function activate(context: ExtensionContext) {
     settings.get('wholeLine.warningColor', '#ff980088'),
     settings.get('wholeLine.errorFontColor', '#e3e3e3'),
     settings.get('wholeLine.warningFontColor', '#000000'),
+    settings.get('wholeLine.length', 0),
   );
 
   diagnosticBar.setGutterDecorator(settings.get('gutter.show'));
@@ -85,6 +86,7 @@ export function activate(context: ExtensionContext) {
         _settings.get('wholeLine.warningColor', '#ff980088'),
         _settings.get('wholeLine.errorFontColor', '#e3e3e3'),
         _settings.get('wholeLine.warningFontColor', '#000000'),
+        _settings.get('wholeLine.length', 0),
       );
 
       diagnosticBar.setGutterDecorator(_settings.get('gutter.show'));
