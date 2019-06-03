@@ -1,4 +1,11 @@
 # Change Log
+## [v 0.4.0] 06-03-2019
+### New
+* toggle on or off individual gutter icons
+* toggle on or off the linter message in the statusbar
+* truncate the message length for the line decorator
+___
+
 ## [v 0.3.0] 02-26-2019
 ### New
 * turn on/off gutter icons
