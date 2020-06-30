@@ -3,11 +3,11 @@
   "version": "0.4.0",
   "publisher": "JoeBerria",
   "engines": {
-    "vscode": "^1.34.0"
+    "vscode": "^1.35.0"
   },
   "author": {
     "name": "Joe Berria",
-    "email": "joeberria@fastmail.com"
+    "email": "joeberria@gmail.com"
   },
   "description": "Show error and warning messages in the status bar, gutter or on the current line",
   "displayName": "Statusbar error",
@@ -142,9 +142,9 @@
     "test": "node ./node_modules/vscode/bin/test"
   },
   "devDependencies": {
-    "@types/node": "^10.14.8",
-    "@types/vscode": "^1.34.0",
-    "typescript": "^3.5.1"
+    "@types/node": "^12.12.0",
+    "@types/vscode": "^1.35.0",
+    "typescript": "^3.9.4"
   },
   "license": "MIT"
 }
