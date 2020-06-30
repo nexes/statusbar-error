@@ -32,6 +32,9 @@
   "activationEvents": [
     "*"
   ],
+  "extensionKind": [
+    "ui"
+  ],
   "contributes": {
     "configuration": {
       "title": "Statusbar Error Configuration",
