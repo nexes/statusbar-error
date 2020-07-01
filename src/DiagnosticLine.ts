@@ -31,17 +31,18 @@ export class DiagnosticLine implements Disposable {
     this._maxLineLength = 0;
     this._defaultGutterDecoration = window.createTextEditorDecorationType({});
 
-    for (const [ , value ] of this._lineDecorators) {
+    for (const [, value] of this._lineDecorators) {
       this._disposables.push(value);
     }
   }
 
-  public updateSettings(show: boolean,
-                        errorColor: string,
-                        warnColor: string,
-                        errFontColor: string,
-                        warnFontColor: string,
-                        length: number): void {
+  public updateSettings(
+    show: boolean,
+    errorColor: string,
+    warnColor: string,
+    errFontColor: string,
+    warnFontColor: string,
+    length: number): void {
     this._showLine = show;
     this._maxLineLength = length;
     this._lineDecorators.clear();
